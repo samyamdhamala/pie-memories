@@ -75,6 +75,17 @@ class Store {
     event.memoriesWindowHours = windowHours;
     return event;
   }
+
+  /**
+   * Every event the client sees needs goingUserIds/interestedUserIds attached — the client
+   * reads them unconditionally (e.g. `event.goingUserIds.includes(...)`), so any endpoint that
+   * returns a bare Event without this crashes the client on that response.
+   */
+  decorateEvent(eventId: string): (Event & { goingUserIds: string[]; interestedUserIds: string[] }) | undefined {
+    const event = this.getEvent(eventId);
+    if (!event) return undefined;
+    return { ...event, goingUserIds: this.goingUserIds(eventId), interestedUserIds: this.interestedUserIds(eventId) };
+  }
 }
 
 export const store = new Store();

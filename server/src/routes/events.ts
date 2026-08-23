@@ -3,19 +3,14 @@ import { store } from "../store.js";
 
 export const eventsRouter = Router();
 
-function decorate(event: ReturnType<typeof store.getEvent>) {
-  if (!event) return event;
-  return { ...event, goingUserIds: store.goingUserIds(event.id), interestedUserIds: store.interestedUserIds(event.id) };
-}
-
 eventsRouter.get("/", (_req, res) => {
-  res.json(store.events.map((e) => decorate(e)));
+  res.json(store.events.map((e) => store.decorateEvent(e.id)));
 });
 
 eventsRouter.get("/:id", (req, res) => {
-  const event = store.getEvent(req.params.id);
+  const event = store.decorateEvent(req.params.id);
   if (!event) return res.status(404).json({ error: "Event not found" });
-  res.json(decorate(event));
+  res.json(event);
 });
 
 eventsRouter.post("/:id/rsvp", (req, res) => {

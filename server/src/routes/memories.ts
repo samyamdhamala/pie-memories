@@ -110,6 +110,6 @@ memoriesRouter.patch("/settings", (req, res) => {
     return res.status(400).json({ error: "windowHours must be one of 24, 48, 72, 168" });
   }
 
-  const updated = store.updateMemoriesSettings(event.id, enabled, windowHours as MemoriesWindow);
-  res.json(updated);
+  store.updateMemoriesSettings(event.id, enabled, windowHours as MemoriesWindow);
+  res.json(store.decorateEvent(event.id));
 });
