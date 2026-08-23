@@ -36,13 +36,14 @@ export default function App() {
 
   const visibleEvents = useMemo(() => {
     const isPast = (e: Event) => new Date(e.endTime).getTime() < Date.now();
+    const hasJoined = (e: Event) =>
+      e.goingUserIds.includes(currentUserId) || e.interestedUserIds.includes(currentUserId);
     switch (activeTab) {
       case "past":
-        return events.filter(isPast);
+        // Mirrors the Memories access rule itself: you only see a plan here if you RSVP'd to it.
+        return events.filter((e) => isPast(e) && hasJoined(e));
       case "joined":
-        return events.filter(
-          (e) => e.goingUserIds.includes(currentUserId) || e.interestedUserIds.includes(currentUserId),
-        );
+        return events.filter(hasJoined);
       case "created":
         return events.filter((e) => e.creatorId === currentUserId);
       case "curated":

@@ -3,3 +3,8 @@ dist/
 *.tsbuildinfo
 *.log
 .DS_Store
+
+# Not committed: a lockfile generated on Windows can omit the Linux-native
+# optional dependency Rollup needs (npm/cli#4828), breaking the Render build.
+# Each environment resolves its own fresh, platform-correct lockfile instead.
+package-lock.json
